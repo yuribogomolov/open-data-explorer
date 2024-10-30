@@ -1,5 +1,5 @@
 from pydantic import BaseModel
 
 
-class SearchResultsModel(BaseModel):
+class SearchQueriesModel(BaseModel):
     search_queries: list[str]

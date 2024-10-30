@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from open_data_explorer.models.search_results import SearchResultsModel
+from open_data_explorer.models.search_queries import SearchQueriesModel
 
 
 class BaseQuery(ABC):
@@ -30,7 +30,7 @@ class SearchQuery(BaseQuery):
     @property
     def model_class(self):
         """Query response model class"""
-        return SearchResultsModel
+        return SearchQueriesModel
 
     @property
     def prompt_template(self) -> str:
