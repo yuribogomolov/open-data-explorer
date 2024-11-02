@@ -1,0 +1,18 @@
+Pick datasets from the list above that can be used to answer the query below.
+
+=== Query ===
+{{ user_query }}
+
+=== Data Sets ===
+{% for dataset in datasets %}
+dataset_id: {{ dataset.resource.id }}
+dataset_name: {{ dataset.resource.name }}
+description: {{ dataset.resource.description }}
+columns: {{ dataset.resource.columns_description }}
+
+-----
+{% endfor %}
+
+=== Task ===
+Output a json message with one field that cons a list of dataset ids, that can be used to answer the query.
+The list should be empty if the query above can not be answered given these datasets.

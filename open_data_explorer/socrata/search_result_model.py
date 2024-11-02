@@ -31,7 +31,6 @@ class Resource(BaseModel):
     columns_field_name: List[str]
     columns_datatype: List[str]
     columns_description: List[str]
-    columns_format: List[Dict[str, Any]]
     download_count: int
     provenance: str
     lens_view_type: str

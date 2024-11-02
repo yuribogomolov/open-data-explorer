@@ -1,6 +1,6 @@
 import asyncio
-from typing import List, Dict, Any
-from open_data_explorer.socrata.search_result_model import SearchApiResponse
+from typing import List, Dict, Set
+from open_data_explorer.socrata.search_result_model import SearchApiResponse, Result
 import aiohttp
 
 
@@ -41,13 +41,25 @@ class AsyncSearcher:
             tasks = [self.fetch_query(session, query) for query in queries]
             return await asyncio.gather(*tasks)
 
-    def get_search_results(self, queries: List[str]) -> List[SearchApiResponse]:
-        """Synchronous wrapper to run the asynchronous fetch_queries method.
+    def get_search_results(self, queries: List[str]) -> List[Result]:
+        """Synchronous wrapper to run queries asynchronously and de-duplicate results.
 
         Args:
             queries (List[str]): A list of search query strings.
 
         Returns:
-            List[Dict[str, Any]]: A list of JSON responses from the API.
+            List[Result]: A de-duplicated list of Result objects.
         """
-        return asyncio.run(self.fetch_queries(queries))
+        responses = asyncio.run(self.fetch_queries(queries))
+        merged_results = []
+        seen_ids: Set[str] = set()
+
+        for response in responses:
+            for result in response.results:
+                if len(result.resource.columns_name) > 0:
+                    resource_id = result.resource.id
+                    if resource_id not in seen_ids:
+                        seen_ids.add(resource_id)
+                        merged_results.append(result)
+
+        return merged_results
